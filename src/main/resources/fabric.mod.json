@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "addon-template",
+  "version": "${version}",
+  "name": "BebraHack V3",
+  "description": "the best addon.",
+  "authors": [
+    "jabronyyy",
+    "MrFiNka"
+  ],
+  "contact": {
+    "repo": ""
+  },
+  "icon": "assets/template/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "com.example.addon.Addon"
+    ]
+  },
+  "mixins": [
+    "addon.mixins.json"
+  ],
+  "custom": {
+    "meteor-client:color": "225,25,25"
+  },
+  "depends": {
+    "java": ">=17",
+    "minecraft": ">=${mc_version}",
+    "meteor-client": "*"
+  }
+}
