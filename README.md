@@ -11,7 +11,10 @@
   <img alt="GitHub code size" src="https://img.shields.io/github/languages/code-size/BebraHack/BebraHackAddon?color=00aaff&style=flat-square">
   <img alt="GitHub issues" src="https://img.shields.io/github/issues/BebraHack/BebraHackAddon?color=00b7ff&style=flat-square">
   <img src="https://img.shields.io/static/v1?label=Tacos&message=Tasty&color=00c8ff&style=flat-square">
+<a href="https://discord.gg/QyEzReq4u2"><img src="https://invidget.switchblade.xyz/QyEzReq4u2"></a>
 </div>
+
+  
 
 ## ℹ️ Information
 This addon adds many new features to the [Meteor Client](https://meteorclient.com/). If you want to add or suggest any feature, then write [here](https://github.com/BebraHack/BebraHackAddon/issues/new?assignees=&labels=enhancement&template=feature_request.yml&title=%5BSuggestion%5D+).
