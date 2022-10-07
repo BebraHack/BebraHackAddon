@@ -268,7 +268,7 @@ public class BEntityUtils {
 
     public static boolean isBurrowed(PlayerEntity targetEntity, BlastResistantType type) {
         BlockPos playerPos = BWorldUtils.roundBlockPos(new Vec3d(targetEntity.getX(), targetEntity.getY() + 0.4, targetEntity.getZ()));
-        // Adding a 0.4 to the Y check since sometimes when the player moves around weirdly/ after chorusing they tend to clip into the block under them
+        // Adding a 0.4 to the Y check since sometimes when the player moves around weirdly after chorusing they tend to clip into the block under them
         return isBlastResistant(playerPos, type);
     }
 
