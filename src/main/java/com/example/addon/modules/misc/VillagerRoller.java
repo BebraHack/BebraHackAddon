@@ -1,4 +1,4 @@
-package maxsuperman.addons.roller.modules;
+package com.example.addon.modules.misc;
 
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.entity.player.StartBreakingBlockEvent;
