@@ -16,7 +16,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.client.tutorial.TutorialStep;
 
 
-
 import java.util.ArrayList;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
