@@ -135,7 +135,7 @@ public class AutoSex extends Module{
     private final Setting<Integer> delay = sgSex.add(new IntSetting.Builder()
         .name("delay")
         .description("The delay between specified messages in ticks.")
-        .defaultValue(20)
+        .defaultValue(80)
         .min(0)
         .sliderMax(200)
         .visible(message::get)
