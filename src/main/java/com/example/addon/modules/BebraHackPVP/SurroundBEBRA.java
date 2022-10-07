@@ -69,7 +69,7 @@ public class SurroundBEBRA extends Module {
 
 
     public SurroundBEBRA() {
-        super(Addon.combat, "surround-plus", "Surround v2.");
+        super(Addon.combat, "surround-plus", "Surround BEBRA.");
     }
 
     public SurroundBEBRA(Category category, String name, String description) {
