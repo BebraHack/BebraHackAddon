@@ -1,7 +1,7 @@
 <div align="center">
   <h1>BebraHack</h1>
   <kbd>
-    <img width="569" alt="BebraHack banner" src="https://i.ytimg.com/vi/23Js-3o1FQo/maxresdefault.jpg">
+    <img width="569" alt="BebraHack banner" src="https://i.ibb.co/WtVWrXX/image.jpg">
   </kbd>
   <h3>Adds additional functionality to Meteor Client ☄️</h3>
   <img alt="Minecraft" src="https://img.shields.io/badge/Minecraft-1.19.2-ff00ff?logo=hackthebox&logoColor=white&style=flat-square">
