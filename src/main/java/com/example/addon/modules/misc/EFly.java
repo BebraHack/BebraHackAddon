@@ -22,8 +22,8 @@ public class EFly extends Module {
 
     //General
     private final Setting<Boolean> takeoff = sgGeneral.add(new BoolSetting.Builder().name("take-off").defaultValue(false).build());
-    public final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>().name("mode").defaultValue(Mode.Automatic).build());
-    private final Setting<Double> speed = sgGeneral.add(new DoubleSetting.Builder().name("factor").defaultValue(0.5).min(0.1).sliderMax(4).build());
+    public final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>().name("mode").defaultValue(Mode.Boost).build());
+    private final Setting<Double> speed = sgGeneral.add(new DoubleSetting.Builder().name("factor").defaultValue(0.270).min(0.1).sliderMax(4).build());
 
     //Automatic
     private final Setting<Integer> startAt = sgAutomatic.add(new IntSetting.Builder().name("start-fly-at").description("The Y coordinate to start automatic module. Recommended 70~").defaultValue(75).min(25).sliderMin(25).sliderMax(255).build());
