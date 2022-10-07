@@ -1,6 +1,5 @@
-package com.example.addon.modules.misc;
+package maxsuperman.addons.roller.modules;
 
-import com.example.addon.Addon;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.entity.player.StartBreakingBlockEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -48,6 +47,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.minecraft.sound.SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK;
 
@@ -56,10 +56,10 @@ public class VillagerRoller extends Module {
     private final SettingGroup sgSound = settings.createGroup("Sound");
 
     private final Setting<Boolean> disableIfFound = sgGeneral.add(new BoolSetting.Builder()
-        .name("disable-when-found")
-        .description("Disable enchantment from list if found")
-        .defaultValue(true)
-        .build());
+            .name("disable-when-found")
+            .description("Disable enchantment from list if found")
+            .defaultValue(true)
+            .build());
 
     private final Setting<Boolean> saveListToConfig = sgGeneral.add(new BoolSetting.Builder()
         .name("save-list-to-config")
@@ -68,44 +68,44 @@ public class VillagerRoller extends Module {
         .build());
 
     private final Setting<Boolean> enablePlaySound = sgGeneral.add(new BoolSetting.Builder()
-        .name("enable-sound")
-        .description("Plays sound when it finds desired trade")
-        .defaultValue(true)
-        .build());
+            .name("enable-sound")
+            .description("Plays sound when it finds desired trade")
+            .defaultValue(true)
+            .build());
 
     private final Setting<List<SoundEvent>> sound = sgSound.add(new SoundEventListSetting.Builder()
-        .name("sound-to-play")
-        .description("Sound that will be played when desired trade is found if enabled")
-        .defaultValue(Collections.singletonList(BLOCK_AMETHYST_CLUSTER_BREAK))
-        .build());
+            .name("sound-to-play")
+            .description("Sound that will be played when desired trade is found if enabled")
+            .defaultValue(Collections.singletonList(BLOCK_AMETHYST_CLUSTER_BREAK))
+            .build());
 
     private final Setting<Double> soundPitch = sgSound.add(new DoubleSetting.Builder()
-        .name("sound-pitch")
-        .description("Playing sound pitch")
-        .defaultValue(1.0)
-        .min(0)
-        .sliderRange(0, 8)
-        .build());
+            .name("sound-pitch")
+            .description("Playing sound pitch")
+            .defaultValue(1.0)
+            .min(0)
+            .sliderRange(0, 8)
+            .build());
 
     private final Setting<Double> soundVolume = sgSound.add(new DoubleSetting.Builder()
-        .name("sound-volume")
-        .description("Playing sound volume")
-        .defaultValue(1.0)
-        .min(0)
-        .sliderRange(0, 1)
-        .build());
+            .name("sound-volume")
+            .description("Playing sound volume")
+            .defaultValue(1.0)
+            .min(0)
+            .sliderRange(0, 1)
+            .build());
 
     private final Setting<Boolean> pauseOnScreen = sgGeneral.add(new BoolSetting.Builder()
-        .name("pause-on-screens")
-        .description("Pauses rolling if any screen is open")
-        .defaultValue(true)
-        .build());
+            .name("pause-on-screens")
+            .description("Pauses rolling if any screen is open")
+            .defaultValue(true)
+            .build());
 
     private final Setting<Boolean> headRotateOnPlace = sgGeneral.add(new BoolSetting.Builder()
-        .name("rotate-place")
-        .description("Look to the block while placing it?")
-        .defaultValue(true)
-        .build());
+            .name("rotate-place")
+            .description("Look to the block while placing it?")
+            .defaultValue(true)
+            .build());
 
     public enum State {
         Disabled,
@@ -126,7 +126,7 @@ public class VillagerRoller extends Module {
     public List<rollingEnchantment> searchingEnchants = new ArrayList<>();
 
     public VillagerRoller() {
-        super(Addon.misc, "villager-roller", "Rolls trades.");
+        super(Categories.Misc, "villager-roller", "Rolls trades.");
     }
 
     @Override
@@ -301,7 +301,7 @@ public class VillagerRoller extends Module {
             table.add(label);
 
             WIntEdit lev = table.add(theme.intEdit(e.minLevel, 0, e.enchantment.getMaxLevel(), true)).minWidth(40)
-                .expandX().widget();
+                    .expandX().widget();
             lev.action = () -> e.minLevel = lev.get();
             lev.tooltip = "Minimum enchantment level, 0 acts as maximum possible only";
 
@@ -346,7 +346,7 @@ public class VillagerRoller extends Module {
         addAll.action = () -> {
             list.clear();
             searchingEnchants.clear();
-            for (Enchantment e : Registry.ENCHANTMENT) {
+            for (Enchantment e : Registry.ENCHANTMENT.stream().filter(Enchantment::isAvailableForEnchantedBookOffer).toList()) {
                 searchingEnchants.add(new rollingEnchantment(e, e.getMaxLevel(), getMinimumPrice(e, e.getMaxLevel()), false));
             }
             fillWidget(theme, list);
@@ -366,7 +366,7 @@ public class VillagerRoller extends Module {
     }
 
     public static class EnchantmentSelectScreen extends WindowScreen {
-        private final Registry<Enchantment> available = Registry.ENCHANTMENT;
+        private final List<Enchantment> available = Registry.ENCHANTMENT.stream().filter(Enchantment::isAvailableForEnchantedBookOffer).toList();
         private final GuiTheme theme;
         private final EnchantmentSelectCallback callback;
 
@@ -420,21 +420,21 @@ public class VillagerRoller extends Module {
                     if (e.minLevel <= 0) {
                         if (enchant.getValue() != e.enchantment.getMaxLevel()) {
                             info(String.format("Found enchant %s but it is not max level: %d (max) > %d (found)",
-                                Names.get(e.enchantment), e.enchantment.getMaxLevel(), enchant.getValue()));
+                                    Names.get(e.enchantment), e.enchantment.getMaxLevel(), enchant.getValue()));
                             continue;
                         }
                     } else {
                         if (e.minLevel > enchant.getValue()) {
                             info(String.format(
-                                "Found enchant %s but it has too low level: %d (requested level) > %d (rolled level)",
-                                Names.get(e.enchantment), e.minLevel, enchant.getValue()));
+                                    "Found enchant %s but it has too low level: %d (requested level) > %d (rolled level)",
+                                    Names.get(e.enchantment), e.minLevel, enchant.getValue()));
                             continue;
                         }
                     }
                     if (e.maxCost > 0 && offer.getOriginalFirstBuyItem().getCount() > e.maxCost) {
                         info(String.format("Found enchant %s but it costs too much: %s (max price) < %d (cost)",
-                            Names.get(e.enchantment),
-                            e.maxCost, offer.getOriginalFirstBuyItem().getCount()));
+                                Names.get(e.enchantment),
+                                e.maxCost, offer.getOriginalFirstBuyItem().getCount()));
                         continue;
                     }
                     if (disableIfFound.get()) {
@@ -443,14 +443,14 @@ public class VillagerRoller extends Module {
                     toggle();
                     if (enablePlaySound.get() && sound.get().size() > 0) {
                         mc.getSoundManager().play(PositionedSoundInstance.master(this.sound.get().get(0),
-                            soundPitch.get().floatValue(), soundVolume.get().floatValue()));
+                                soundPitch.get().floatValue(), soundVolume.get().floatValue()));
                     }
                     break;
                 }
                 if (!found) {
                     info(String.format("Found enchant %s but it is not in the list.", Names.get(enchant.getKey()))); // StringHelper.stripTextFormat(new
-                    // TranslatableText(enchant.getKey().getTranslationKey()).getString()),
-                    // enchant.getValue().toString()));
+                                                                                                                     // TranslatableText(enchant.getKey().getTranslationKey()).getString()),
+                                                                                                                     // enchant.getValue().toString()));
                 }
             }
         }
