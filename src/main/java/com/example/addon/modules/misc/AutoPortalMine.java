@@ -22,7 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import olejka.meteorplus.MeteorPlus;
+import com.example.addon.Addon;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class AutoPortalMine extends Module {
 	public AutoPortalMine() {
-		super(MeteorPlus.CATEGORY, "Auto-portal-mine", "Automatically mine obsidian.");
+		super(Addon.CATEGORY, "Auto-portal-mine", "Automatically mine obsidian.");
 	}
 
 	private final SettingGroup sgGeneral = settings.getDefaultGroup();
