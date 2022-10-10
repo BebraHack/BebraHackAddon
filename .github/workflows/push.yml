@@ -1,12 +1,12 @@
 name: Java CI with Gradle
 
 concurrency: 
-  group: "V3"
+  group: "V4"
   cancel-in-progress: true
 
 on:
   push:
-    branches: [ V3 ]
+    branches: [ V4 ]
     paths-ignore:
       - '*.md'
 
@@ -32,6 +32,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "V3"
           prerelease: false
-          title: "V3"
+          title: "V4"
           files: |
             ./build/libs/*.jar
