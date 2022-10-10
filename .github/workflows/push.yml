@@ -1,15 +1,14 @@
 name: Java CI with Gradle
 
 concurrency: 
-  group: "build-1.19.2"
+  group: "V3"
   cancel-in-progress: true
 
 on:
   push:
-    branches: [ master ]
+    branches: [ V3 ]
     paths-ignore:
       - '*.md'
-      
 
 jobs:
   build:
@@ -31,8 +30,8 @@ jobs:
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest-1.19.2"
+          automatic_release_tag: "V3"
           prerelease: false
-          title: "Latest 1.19.2 V3"
+          title: "V3"
           files: |
             ./build/libs/*.jar
