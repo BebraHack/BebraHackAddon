@@ -1,402 +1,422 @@
 package com.example.addon.modules.misc;
 
-import baritone.api.BaritoneAPI;
-import meteordevelopment.meteorclient.events.render.Render3DEvent;
-import meteordevelopment.meteorclient.events.world.TickEvent;
-import meteordevelopment.meteorclient.renderer.ShapeMode;
-import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.systems.modules.world.Nuker;
-import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.misc.Pool;
-import meteordevelopment.meteorclient.utils.player.PlayerUtils;
-import meteordevelopment.meteorclient.utils.player.Rotations;
-import meteordevelopment.meteorclient.utils.render.color.Color;
-import meteordevelopment.meteorclient.utils.world.BlockIterator;
-import meteordevelopment.meteorclient.utils.world.BlockUtils;
-import meteordevelopment.meteorclient.utils.world.Dimension;
-import meteordevelopment.orbit.EventHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import com.example.addon.Addon;
+import meteordevelopment.meteorclient.events.meteor.MouseButtonEvent;
+import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.settings.*;
+import meteordevelopment.meteorclient.systems.config.Config;
+import meteordevelopment.meteorclient.systems.friends.Friends;
+import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.systems.modules.Modules;
+import meteordevelopment.meteorclient.utils.Utils;
+import meteordevelopment.meteorclient.utils.entity.SortPriority;
+import meteordevelopment.meteorclient.utils.entity.TargetUtils;
+import meteordevelopment.meteorclient.utils.misc.Keybind;
+import meteordevelopment.meteorclient.utils.misc.input.KeyAction;
+import meteordevelopment.orbit.EventHandler;
+import meteordevelopment.orbit.EventPriority;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-public class AutoPortalMine extends Module {
-	public AutoPortalMine() {
-		super(Addon.CATEGORY, "Auto-portal-mine", "Automatically mine obsidian.");
-	}
-
-	private final SettingGroup sgGeneral = settings.getDefaultGroup();
-	private final Setting<String> command = sgGeneral.add(new StringSetting.Builder()
-		.name("command")
-		.description("Send command.")
-		.defaultValue("/home")
-		.build()
-	);
-
-	private final Setting<Integer> delayCommand = sgGeneral.add(new IntSetting.Builder()
-		.name("command-delay")
-		.description("Ticks delay.")
-		.defaultValue(700)
-		.build()
-	);
-
-	private final Setting<Integer> delay = sgGeneral.add(new IntSetting.Builder()
-		.name("Mining-delay")
-		.description("Mining delay.")
-		.defaultValue(4)
-		.build()
-	);
-
-	private final Setting<Boolean> rotate = sgGeneral.add(new BoolSetting.Builder()
-		.name("rotate")
-		.description("Rotate to block.")
-		.defaultValue(false)
-		.build()
-	);
-
-	private final Setting<Boolean> swingHand = sgGeneral.add(new BoolSetting.Builder()
-		.name("swing-hand")
-		.description("Swing hand client side.")
-		.defaultValue(true)
-		.build()
-	);
-
-	private int commandDelay = 0;
-
-	private boolean isTeleport = false;
-	private boolean canTeleport = false;
-
-	@EventHandler
-	private void onTick(TickEvent.Pre event) {
-
-		if (commandDelay <= delayCommand.get()) {
-			commandDelay++;
-		}
-		if (PlayerUtils.getDimension() == Dimension.Overworld) {
-			commandDelay = 0;
-			isTeleport = false;
-			isMine = false;
-			if (!BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().hasPath() && !BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) {
-				BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute("goto nether_portal");
-			}
-		}
-		else if (PlayerUtils.getDimension() == Dimension.Nether) {
-			List<BlockPos> obsidians = getPortalBlocks();
-			isMine = true;
-			if ((obsidians.size() == 0 || blocks.size() == 0)) {
-				if (mc.player != null && commandDelay >= delayCommand.get()) {
-					mc.player.sendChatMessage(command.get(), Text.empty());
-					canTeleport = false;
-					commandDelay = 0;
-				}
-			}
-		}
-	}
-
-	private final AutoPortalMine.Shape shape = Shape.Cube;
-
-	private final AutoPortalMine.Mode mode = Mode.All;
-
-	private final Double range = 5.5;
-
-
-	private final Integer range_up = 6;
-
-	private final Integer range_down = 0;
-
-	private final Integer range_left = 2;
-
-	private final Integer range_right = 2;
-
-	private final Integer range_forward = 0;
-
-	private final Integer range_back = 0;
-
-	private final Integer maxBlocksPerTick = 1;
-
-	private final AutoPortalMine.SortMode sortMode = SortMode.Closest;
-
-	private final Pool<BlockPos.Mutable> blockPosPool = new Pool<>(BlockPos.Mutable::new);
-	private final List<BlockPos.Mutable> blocks = new ArrayList<>();
-
-	private final Pool<Nuker.RenderBlock> renderBlockPool = new Pool<>(Nuker.RenderBlock::new);
-	private final List<Nuker.RenderBlock> renderBlocks = new ArrayList<>();
-
-	private boolean firstBlock;
-	private final BlockPos.Mutable lastBlockPos = new BlockPos.Mutable();
-
-	private int timer;
-	private int noBlockTimer;
-
-	private BlockPos.Mutable pos1 = new BlockPos.Mutable(); // Rendering for cubes
-	private BlockPos.Mutable pos2 = new BlockPos.Mutable();
-	private Box box;
-	int maxh = 0;
-	int maxv = 0;
-
-	@Override
-	public void onActivate() {
-		commandDelay = delayCommand.get();
-		firstBlock = true;
-		for (Nuker.RenderBlock renderBlock : renderBlocks) renderBlockPool.free(renderBlock);
-		renderBlocks.clear();
-		timer = 0;
-		noBlockTimer = 0;
-	}
-
-	@Override
-	public void onDeactivate()
-	{
-		if (BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().hasPath() || BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) {
-			BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute("stop");
-		}
-		for (Nuker.RenderBlock renderBlock : renderBlocks) renderBlockPool.free(renderBlock);
-		renderBlocks.clear();
-	}
-
-	private boolean isMine = false;
-
-	private void rotate(BlockPos target) {
-		Rotations.rotate(Rotations.getYaw(target), Rotations.getPitch(target), null);
-	}
-
-	@EventHandler
-	private void onTickPre(TickEvent.Pre event) {
-		renderBlocks.forEach(Nuker.RenderBlock::tick);
-
-		// Update timer
-		if (timer > 0) {
-			timer--;
-			return;
-		}
-
-		// Calculate some stuff
-		assert mc.player != null;
-		double pX = mc.player.getX();
-		double pY = mc.player.getY();
-		double pZ = mc.player.getZ();
-
-		double rangeSq = Math.pow(range, 2);
-
-		if (shape == AutoPortalMine.Shape.UniformCube) Math.round(range);
-
-		// Some render stuff
-
-		double pX_ = pX;
-		double pZ_ = pZ;
-		int r = (int) Math.round(range);
-
-		if (shape == AutoPortalMine.Shape.UniformCube) {
-			pX_ += 1; // weired position stuff
-			pos1.set(pX_ - r, pY - r + 1, pZ - r+1); // down
-			pos2.set(pX_ + r-1, pY + r, pZ + r); // up
-		} else {
-			int direction = Math.round((mc.player.getRotationClient().y % 360) / 90);
-			direction = (direction == 4 || direction == -4)? 0: direction;
-			direction = direction == -2? 2: direction == -1? 3: direction == -3? 1: direction; // stupid java not doing modulo shit
-
-			// direction == 1
-			pos1.set(pX_ - (range_forward), Math.ceil(pY) - range_down, pZ_ - range_right); // down
-			pos2.set(pX_ + range_back+1, Math.ceil(pY + range_up + 1), pZ_ + range_left+1); // up
-
-			// Only change me if you want to mess with 3D rotations:
-			if (direction == 2) {
-				pX_ += 1;
-				pZ_ += 1;
-				pos1.set(pX_ - (range_left+1), Math.ceil(pY) - range_down, pZ_ - (range_forward+1)); // down
-				pos2.set(pX_ + range_right, Math.ceil(pY + range_up + 1), pZ_ + range_back); // up
-			} else if (direction == 3) {
-				pX_ += 1;
-				pos1.set(pX_ - (range_back+1), Math.ceil(pY) - range_down, pZ_ - range_left); // down
-				pos2.set(pX_ + range_forward, Math.ceil(pY + range_up + 1), pZ_ + range_right+1); // up
-			} else if (direction == 0) {
-				pZ_ += 1;
-				pX_ += 1;
-				pos1.set(pX_ - (range_right+1), Math.ceil(pY) - range_down, pZ_ - (range_back+1)); // down
-				pos2.set(pX_ + range_left, Math.ceil(pY + range_up + 1), pZ_ + range_forward); // up
-			}
-
-			// get largest horizontal
-			maxh = 1 + Math.max(Math.max(Math.max(range_back,range_right),range_forward),range_left);
-			maxv = 1 + Math.max(range_up, range_down);
-		}
-
-		if (mode == AutoPortalMine.Mode.Flatten){
-			pos1.setY((int) Math.floor(pY));
-		}
-		box = new Box(pos1, pos2);
-
-
-		// Find blocks to break
-		BlockIterator.register(Math.max((int) Math.ceil(range+1), maxh), Math.max((int) Math.ceil(range), maxv), (blockPos, blockState) -> {
-			// Check for air, unbreakable blocks and distance
-			boolean toofarSphere = Utils.squaredDistance(pX, pY, pZ, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5) > rangeSq;
-			boolean toofarUniformCube = maxDist(Math.floor(pX), Math.floor(pY), Math.floor(pZ), blockPos.getX(), blockPos.getY(), blockPos.getZ()) >= range;
-			boolean toofarCube = !box.contains(Vec3d.ofCenter(blockPos));
-
-//            MeteorClient.LOG.info(box + " " + blockPos + " " + box.contains(Vec3d.ofCenter(blockPos)));
-
-			if (!BlockUtils.canBreak(blockPos, blockState)
-				|| (toofarSphere && shape == AutoPortalMine.Shape.Sphere)
-				|| (toofarUniformCube && shape == AutoPortalMine.Shape.UniformCube)
-				|| (toofarCube && shape == AutoPortalMine.Shape.Cube))
-				return;
-
-			// Flatten
-			if (mode == AutoPortalMine.Mode.Flatten && blockPos.getY() < Math.floor(mc.player.getY())) return;
-
-			// Smash
-			if (mode == AutoPortalMine.Mode.Smash && blockState.getHardness(mc.world, blockPos) != 0) return;
-
-			// Check for selected
-			if (blockState.getBlock() == Blocks.OBSIDIAN || blockState.getBlock() == Blocks.FIRE) {
-				blocks.add(blockPosPool.get().set(blockPos));
-			}
-		});
-
-		// Break block if found
-		BlockIterator.after(() -> {
-
-			if (isMine) {
-				if (sortMode != AutoPortalMine.SortMode.None) {
-					if (sortMode == AutoPortalMine.SortMode.Closest || sortMode == AutoPortalMine.SortMode.Furthest)
-						blocks.sort(Comparator.comparingDouble(value -> Utils.squaredDistance(pX, pY, pZ, value.getX() + 0.5, value.getY() + 0.5, value.getZ() + 0.5) * (sortMode == AutoPortalMine.SortMode.Closest ? 1 : -1)));
-					else if (sortMode == AutoPortalMine.SortMode.TopDown)
-						blocks.sort(Comparator.comparingDouble(value -> -1 * value.getY()));
-				}
-
-				// Check if some block was found
-				if (blocks.isEmpty()) {
-					// If no block was found for long enough then set firstBlock flag to true to not wait before breaking another again
-					if (noBlockTimer++ >= delay.get()) firstBlock = true;
-					return;
-				} else {
-					noBlockTimer = 0;
-				}
-
-				// Update timer
-				if (!firstBlock && !lastBlockPos.equals(blocks.get(0))) {
-					timer = delay.get();
-
-					firstBlock = false;
-					lastBlockPos.set(blocks.get(0));
-
-					if (timer > 0) return;
-				}
-
-				// Break
-				int count = 0;
-
-				for (BlockPos block : blocks) {
-					if (count >= maxBlocksPerTick) break;
-					if (rotate.get()) {
-						rotate(block);
-					}
-					boolean canInstaMine = BlockUtils.canInstaBreak(block);
-
-					BlockUtils.breakBlock(block, swingHand.get());
-					renderBlocks.add(renderBlockPool.get().set(block));
-
-					lastBlockPos.set(block);
-
-					count++;
-					if (!canInstaMine) break;
-				}
-
-				firstBlock = false;
-
-				// Clear current block positions
-				for (BlockPos.Mutable blockPos : blocks) blockPosPool.free(blockPos);
-				blocks.clear();
-			}
-		});
-	}
-
-	public enum Mode {
-		All,
-		Flatten,
-		Smash
-	}
-
-	public enum SortMode {
-		None,
-		Closest,
-		Furthest,
-		TopDown
-
-	}
-	public enum Shape {
-		Cube,
-		UniformCube,
-		Sphere
-	}
-
-
-	public static double maxDist(double x1, double y1, double z1, double x2, double y2, double z2) {
-		// Gets the largest X, Y or Z difference, manhattan style
-		double dX = Math.ceil(Math.abs(x2 - x1));
-		double dY = Math.ceil(Math.abs(y2 - y1));
-		double dZ = Math.ceil(Math.abs(z2 - z1));
-		return Math.max(Math.max(dX, dY), dZ);
-	}
-
-	public static class RenderBlock {
-		public BlockPos.Mutable pos = new BlockPos.Mutable();
-		public int ticks;
-
-		public AutoPortalMine.RenderBlock set(BlockPos blockPos) {
-			pos.set(blockPos);
-			ticks = 8;
-
-			return this;
-		}
-
-		public void tick() {
-			ticks--;
-		}
-
-		public void render(Render3DEvent event, Color sides, Color lines, ShapeMode shapeMode) {
-			int preSideA = sides.a;
-			int preLineA = lines.a;
-
-			sides.a *= (double) ticks / 8;
-			lines.a *= (double) ticks / 8;
-
-			event.renderer.box(pos, sides, lines, shapeMode, 0);
-
-			sides.a = preSideA;
-			lines.a = preLineA;
-		}
-	}
-
-	private List<BlockPos> getPortalBlocks()
-	{
-		List<BlockPos> temp = new ArrayList<BlockPos>();
-		for (int i = 0; i < 6; i++)
-		{
-			for (int i2 = -4; i2 < 4; i2++)
-			{
-				for (int i3 = -4; i3 < 4; i3++)
-				{
-					assert mc.player != null;
-					assert mc.world != null;
-					BlockPos pos = mc.player.getBlockPos().add(i2, i, i3);
-					BlockState state = mc.world.getBlockState(pos);
-					if (state.getBlock() == Blocks.OBSIDIAN)
-					{
-						temp.add(pos);
-					}
-				}
-			}
-		}
-		return temp;
-	}
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+
+public class AutoSex extends Module{
+    public enum Mode {
+        MiddleClick,
+        BindClick,
+        Automatic
+    }
+
+
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgSex = settings.createGroup("Auto Sex");
+
+
+    // General
+    private final Setting<Mode> targetMode = sgGeneral.add(new EnumSetting.Builder<Mode>()
+        .name("target-mode")
+        .description("The mode at which to follow the player.")
+        .defaultValue(Mode.BindClick)
+        .build()
+    );
+
+    private final Setting<Keybind> keybind = sgGeneral.add(new KeybindSetting.Builder()
+        .name("keybind")
+        .description("What key to press to start following someone.")
+        .defaultValue(Keybind.fromKey(-1))
+        .visible(() -> targetMode.get() == Mode.BindClick)
+        .build()
+    );
+
+    private final Setting<SortPriority> priority = sgGeneral.add(new EnumSetting.Builder<SortPriority>()
+        .name("target-priority")
+        .description("How to select the player to target.")
+        .defaultValue(SortPriority.LowestDistance)
+        .visible(() -> targetMode.get() == Mode.Automatic)
+        .build()
+    );
+
+    private final Setting<Boolean> ignoreRange = sgGeneral.add(new BoolSetting.Builder()
+        .name("ignore-range")
+        .description("Follow the player even if they are out of range.")
+        .defaultValue(false)
+        .visible(() -> targetMode.get() == Mode.Automatic)
+        .build()
+    );
+
+    private final Setting<Double> targetRange = sgGeneral.add(new DoubleSetting.Builder()
+        .name("target-range")
+        .description("The range in which it follows a random player.")
+        .defaultValue(10)
+        .range(1,50)
+        .visible(() -> targetMode.get() == Mode.Automatic && !ignoreRange.get())
+        .build()
+    );
+
+    private final Setting<Boolean> onlyFriend = sgGeneral.add(new BoolSetting.Builder()
+        .name("only-friends")
+        .description("Whether or not to only follow friends.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> onlyOther = sgGeneral.add(new BoolSetting.Builder()
+        .name("ignore-friends")
+        .description("Whether or not to follow friends.")
+        .defaultValue(false)
+        .visible(() -> targetMode.get() != Mode.Automatic)
+        .build()
+    );
+
+
+    private final Setting<Boolean> message = sgGeneral.add(new BoolSetting.Builder()
+        .name("message")
+        .description("Sends a message to the player when you start/stop following them.")
+        .defaultValue(false)
+        .build()
+    );
+
+
+    // Sex
+    private final Setting<Boolean> twerkWhenClose = sgSex.add(new BoolSetting.Builder()
+        .name("auto-hump")
+        .description("Crouch against the target to give the appearance of sex OwO.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> dirtyTalk = sgSex.add(new BoolSetting.Builder()
+        .name("dirty-talk")
+        .description("Whisper naughty things in your enemy's ear.")
+        .defaultValue(true)
+        .visible(message::get)
+        .build()
+    );
+
+    private final Setting<Boolean> dm = sgGeneral.add(new BoolSetting.Builder()
+        .name("private-msg")
+        .description("Sends a private chat msg to the person.")
+        .defaultValue(false)
+        .visible(message::get)
+        .build()
+    );
+
+    private final Setting<Boolean> pm = sgGeneral.add(new BoolSetting.Builder()
+        .name("public-msg")
+        .description("Sends a public chat msg.")
+        .defaultValue(false)
+        .visible(message::get)
+        .build()
+    );
+
+    private final Setting<Integer> delay = sgSex.add(new IntSetting.Builder()
+        .name("delay")
+        .description("The delay between specified messages in ticks.")
+        .defaultValue(20)
+        .min(0)
+        .sliderMax(200)
+        .visible(message::get)
+        .build()
+    );
+
+    private final Setting<Boolean> random = sgSex.add(new BoolSetting.Builder()
+        .name("randomise")
+        .description("Selects a random message from your spam message list.")
+        .defaultValue(false)
+        .visible(message::get)
+        .build()
+    );
+
+    private final Setting<List<String>> messages = sgSex.add(new StringListSetting.Builder()
+        .name("messages")
+        .description("Messages to use for dirty talk.")
+        .defaultValue(List.of(
+            "Боже, я так сильно тебя люблю (enemy)~",
+            "Ахххх! Трахни меня сильнее (enemy)!",
+            "Пожалуйста, засунь свой челен в меня (enemy)!",
+            "Я хочу подавиться твоим челеном (enemy)!",
+            "О Боже, он такой большой (enemy)!",
+            "Обращайся со мной как со шлюхой!",
+            "Ахххх! Трахни меня глубже (enemy)!",
+            "Наполи меня своей спермой (enemy)~!",
+            "Уничтожь меня из нутри (enemy)!~"
+        ))
+        .visible(message::get)
+        .build()
+    );
+
+
+    public AutoSex() {
+        super(Addon.misc, "auto-Sex", "Tries to have sex with the player in different ways.");
+    }
+
+
+    private int messageI, timer;
+
+
+    @Override
+    public void onActivate() {
+        timer = delay.get();
+        messageI = 0;
+    }
+
+    boolean isFollowing = false;
+    String playerName;
+    Entity playerEntity;
+    float dis = 1.5f;
+
+    //middle click mode
+    @EventHandler
+    private void onMouseButton(MouseButtonEvent event) {
+        if(targetMode.get() == Mode.MiddleClick){
+            if (event.action == KeyAction.Press && event.button == GLFW_MOUSE_BUTTON_MIDDLE && mc.currentScreen == null && mc.targetedEntity != null && mc.targetedEntity instanceof PlayerEntity) {
+                if (!isFollowing) {
+
+                    if (!Friends.get().isFriend((PlayerEntity) mc.targetedEntity) && onlyFriend.get()) return;
+                    if (Friends.get().isFriend((PlayerEntity) mc.targetedEntity) && onlyOther.get()) return;
+
+                    mc.player.sendChatMessage(Config.get().prefix.get() + "baritone follow player " + mc.targetedEntity.getEntityName(), Text.literal(Config.get().prefix.get() + "baritone follow player " + mc.targetedEntity.getEntityName()));
+
+                    playerName = mc.targetedEntity.getEntityName();
+                    playerEntity = mc.targetedEntity;
+
+                    if (message.get()) {
+                        startMsg();
+                    }
+
+                    isFollowing = true;
+                } else {
+                    mc.player.sendChatMessage(Config.get().prefix.get() + "baritone stop", Text.literal(Config.get().prefix.get() + "baritone stop"));
+
+                    if (message.get()) {
+                        endMsg();
+                    }
+
+                    playerName = null;
+                    isFollowing = false;
+                }
+            }
+            else if(event.action == KeyAction.Press && event.button == GLFW_MOUSE_BUTTON_MIDDLE && isFollowing){
+                mc.player.sendChatMessage(Config.get().prefix.get() + "baritone stop", Text.literal(Config.get().prefix.get() + "baritone stop"));
+
+                if (message.get()) {
+                    endMsg();
+                }
+                playerName = null;
+                isFollowing = false;
+            }
+        }
+    }
+
+    int iPublic;
+    boolean pressed = false;
+    boolean alternate = true;
+
+    @EventHandler (priority = EventPriority.LOW)
+    private void onTick(TickEvent.Post event) {
+
+        if(targetMode.get() == Mode.BindClick && keybind != null)
+        {
+            if(keybind.get().isPressed() && !pressed && !alternate)
+            {
+                if (isFollowing)
+                {
+                    mc.player.sendChatMessage(Config.get().prefix.get() + "baritone stop", Text.literal(Config.get().prefix.get() + "baritone stop"));
+
+                    if (message.get()) {
+                        endMsg();
+                    }
+
+                    pressed = true;
+                    alternate = true;
+                    playerName = null;
+                    isFollowing = false;
+                }
+            }
+
+            if (!keybind.get().isPressed())
+            {
+                pressed = false;
+            }
+
+            if(keybind.get().isPressed() && !pressed && alternate && mc.currentScreen == null && mc.targetedEntity != null && mc.targetedEntity instanceof PlayerEntity)
+            {
+                if (!isFollowing) {
+
+                    if (!Friends.get().isFriend((PlayerEntity) mc.targetedEntity) && onlyFriend.get()) return;
+                    if (Friends.get().isFriend((PlayerEntity) mc.targetedEntity) && onlyOther.get()) return;
+
+                    mc.player.sendChatMessage(Config.get().prefix.get() + "baritone follow player " + mc.targetedEntity.getEntityName(), Text.literal(Config.get().prefix.get() + "baritone follow player " + mc.targetedEntity.getEntityName()));
+
+                    playerName = mc.targetedEntity.getEntityName();
+                    playerEntity = mc.targetedEntity;
+
+                    if (message.get()) {
+                        startMsg();
+                    }
+
+                    pressed = true;
+                    alternate = false;
+                    isFollowing = true;
+                }
+            }
+        }
+
+        if(targetMode.get() == Mode.Automatic){
+
+            if (!isFollowing) {
+                playerEntity = TargetUtils.getPlayerTarget(targetRange.get(), priority.get());
+                if (playerEntity == null) return;
+                playerName = playerEntity.getEntityName();
+
+                if (!Friends.get().isFriend((PlayerEntity) playerEntity) && onlyFriend.get()) return;
+
+                mc.player.sendChatMessage(Config.get().prefix.get() + "baritone follow player " + playerName, Text.literal(Config.get().prefix.get() + "baritone follow player " + playerName));
+
+                if (message.get()) {
+                    startMsg();
+                }
+
+                isFollowing = true;
+            }
+
+            if (!playerEntity.isAlive() || (playerEntity.distanceTo(mc.player) > targetRange.get() && !ignoreRange.get())) {
+                if (message.get()) {
+                    endMsg();
+                }
+
+                mc.player.sendChatMessage(Config.get().prefix.get() + "baritone stop", Text.literal(Config.get().prefix.get() + "baritone stop"));
+                playerEntity = null;
+                playerName = null;
+                isFollowing = false;
+            }
+        }
+
+        if (isFollowing) {
+            if (twerkWhenClose.get()){
+                if (mc.player.distanceTo(playerEntity) < dis) {
+                    if (!Modules.get().get(Twerk.class).isActive()) Modules.get().get(Twerk.class).toggle();
+                } else {
+                    if (Modules.get().get(Twerk.class).isActive()) Modules.get().get(Twerk.class).toggle();
+                }
+            }
+
+            if (dirtyTalk.get()) {
+                if (messages.get().isEmpty()) return;
+
+                if (timer <= 0) {
+                    int i;
+                    if (random.get()) {
+                        i = Utils.random(0, messages.get().size());
+                    } else {
+                        if (messageI >= messages.get().size()) messageI = 0;
+                        i = messageI++;
+                    }
+
+                    iPublic = i;
+
+                    if (message.get()) {
+                        followMsg();
+                    }
+
+                    timer = delay.get();
+                } else {
+                    timer--;
+                }
+            }
+        }
+        else {
+            if (twerkWhenClose.get()){
+                if (Modules.get().get(Twerk.class).isActive()) Modules.get().get(Twerk.class).toggle();
+            }
+        }
+    }
+
+    @Override
+    public void onDeactivate() {
+        if (twerkWhenClose.get()){
+            if (Modules.get().get(Twerk.class).isActive())  Modules.get().get(Twerk.class).toggle();
+        }
+
+        mc.player.sendChatMessage(Config.get().prefix.get() + "baritone stop", Text.literal(Config.get().prefix.get() + "baritone stop"));
+        playerEntity = null;
+        playerName = null;
+        isFollowing = false;
+    }
+
+    public void startMsg()
+    {
+        if (dirtyTalk.get()) {
+            if (dm.get()) {
+                mc.player.sendChatMessage("/tell " + playerName + " Come here bby lets have sex uwu", Text.literal("/tell " + playerName + " Come here bby lets have sex uwu"));
+            }
+
+            if (pm.get()) {
+                mc.player.sendChatMessage("Come here " + playerName + " lets have sex uwu", Text.literal("Come here " + playerName + " lets have sex uwu"));
+            }
+        } else {
+            if (dm.get()) {
+                mc.player.sendChatMessage("/tell " + playerName + " I am now following you using Banana+", Text.literal("/tell " + playerName + " I am now following you using Banana+"));
+            }
+
+            if (pm.get()) {
+                mc.player.sendChatMessage("I am now following " + playerName + " using Banana+", Text.literal("I am now following " + playerName + " using Banana+"));
+            }
+        }
+    }
+
+    public void followMsg()
+    {
+        if (dm.get()) {
+            mc.player.sendChatMessage("/tell " + playerName + " " + messages.get().get(iPublic).replace("(enemy)", playerName), Text.literal("/tell " + playerName + " " + messages.get().get(iPublic).replace("(enemy)", playerName)));
+        }
+
+        if (pm.get()) {
+            mc.player.sendChatMessage(messages.get().get(iPublic).replace("(enemy)", playerName), Text.literal(messages.get().get(iPublic).replace("(enemy)", playerName)));
+        }
+    }
+
+    public void endMsg()
+    {
+        if (dirtyTalk.get()) {
+            if (dm.get()) {
+                mc.player.sendChatMessage("/tell " + playerName + " See u later bby girl ;*", Text.literal("/tell " + playerName + " See u later bby girl ;*"));
+            }
+
+            if (pm.get()) {
+                mc.player.sendChatMessage("See u later " + playerName + " xxx ;*", Text.literal("See u later " + playerName + " xxx ;*"));
+            }
+        } else {
+            if (dm.get()) {
+                mc.player.sendChatMessage("/tell " + playerName + " I am no longer following you", Text.literal("/tell " + playerName + " I am no longer following you"));
+            }
+
+            if (pm.get()) {
+                mc.player.sendChatMessage("I am no longer following " + playerName, Text.literal("I am no longer following " + playerName));
+            }
+        }
+    }
 }
