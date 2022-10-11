@@ -24,8 +24,8 @@ This addon adds many new features to the [Meteor Client](https://meteorclient.co
 ## ⬇️ Download
 You can [see how it looks](https://zgoly.github.io/addonview/generate?user=BebraHack&repo=BebraHackAddon&path=src/main/java/com/example/addon/modules) before downloading.
 
-1. Click **[here](https://github.com/BebraHack/BebraHackAddon/releases/latest/download/bebrahackV3-0.1.0.jar)** to download
-2. Move `bebrahackV3-0.1.0.jar` in `.minecraft/mods` folder
+1. Click **[here](https://github.com/BebraHack/BebraHackAddon/releases/latest/download/bebrahackV4-0.1.0.jar)** to download
+2. Move `bebrahackV4-0.1.0.jar` in `.minecraft/mods` folder
 
 Don't forget to download **[meteor dev build](https://meteorclient.com/download?devBuild=latest)**
 
