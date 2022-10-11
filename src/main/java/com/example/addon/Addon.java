@@ -21,7 +21,7 @@ public class Addon extends MeteorAddon {
     public static final Category combat = new Category("BebraHackPVP");
     public static final Category misc = new Category("BebraHackPVE");
     public static final Category render = new Category("BebraHackRender");
-    public static final HudGroup HUD_GROUP = new HudGroup("BebraHac+");
+    public static final HudGroup HUD_GROUP = new HudGroup("BebraHack+");
 
 
     @Override
@@ -40,8 +40,16 @@ public class Addon extends MeteorAddon {
         Modules.get().add(new InstaMinePlus());
         Modules.get().add(new Burrow());
         Modules.get().add(new AntiSurroundBlocks());
-        Modules.get().add(new SurroundBEBRA());
-        Modules.get().add(new BedAuraBEBRA());
+        Modules.get().add(new FanSurroundBEBRA());
+        Modules.get().add(new CevBreaker());
+        Modules.get().add(new Notifications());
+        Modules.get().add(new PIRAMIDKA());
+        Modules.get().add(new tntauraBEBRA());
+        Modules.get().add(new PacketHoleFill());
+        Modules.get().add(new SurroundV2());
+        Modules.get().add(new AntiTrap());
+        Modules.get().add(new CrystalAyraBEBRA());
+        Modules.get().add(new AnchorAuraBEBRA());
 
         // Misc
         Modules.get().add(new Twerk());
@@ -59,13 +67,16 @@ public class Addon extends MeteorAddon {
         Modules.get().add(new CoordLogger());
         Modules.get().add(new AutoBuildSwastika());
         Modules.get().add(new AutoSex());
-        Modules.get().add(new OldAnvil());
         Modules.get().add(new TreeAura());
         Modules.get().add(new AutoTNT());
         Modules.get().add(new AutoLogin());
         Modules.get().add(new SlotClick());
         Modules.get().add(new EFly());
-        Modules.get().add(new MEGA_DUPE());
+        Modules.get().add(new MEGA_DUPEprank());
+        Modules.get().add(new ChatEncryption());
+        Modules.get().add(new OneClickEat());
+        Modules.get().add(new AutoLogTotems());
+        Modules.get().add(new SilentItem());
 
         // Render
         Modules.get().add(new Confetti());
@@ -73,6 +84,10 @@ public class Addon extends MeteorAddon {
         Modules.get().add(new TimeAnimator());
         Modules.get().add(new NewChunks());
         Modules.get().add(new AntiVanish());
+        Modules.get().add(new Prefix());
+        Modules.get().add(new KillEffects());
+        Modules.get().add(new BurrowESP());
+        Modules.get().add(new PenisESP());
     }
 
     @Override
