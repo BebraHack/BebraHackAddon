@@ -13,7 +13,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import org.slf4j.Logger;
 
 public class Addon extends MeteorAddon {
-    public static String VERSION = "BebraHack V3";
+    public static String VERSION = "BebraHack V4";
     public static String INVITE_LINK = "https://discord.gg/FP8jcqTZyG";
 
     public static final Logger LOG = LogUtils.getLogger();
