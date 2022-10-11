@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "addon-template",
   "version": "${version}",
-  "name": "BebraHack V3",
+  "name": "BebraHack V4",
   "description": "the best addon.",
   "authors": [
     "jabronyyy",
@@ -22,7 +22,7 @@
     "addon.mixins.json"
   ],
   "custom": {
-    "meteor-client:color": "225,25,25"
+    "meteor-client:color": "225,247,184"
   },
   "depends": {
     "java": ">=17",
