@@ -38,7 +38,7 @@ public class AutoBuildSwastika extends Module {
         init();
 
         ticks = 0;
-        // не изменяй блять
+
         for (int pos = 0; pos < blockPos.length; pos++) {
             if (BlockUtils.canPlace(blockPos[pos], true) && ticks <= bpt.get()) {
                 BlockUtils.place(blockPos[pos], findBlock(), 50);

@@ -135,7 +135,7 @@ public class AutoSex extends Module{
     private final Setting<Integer> delay = sgSex.add(new IntSetting.Builder()
         .name("delay")
         .description("The delay between specified messages in ticks.")
-        .defaultValue(80)
+        .defaultValue(20)
         .min(0)
         .sliderMax(200)
         .visible(message::get)
@@ -161,7 +161,7 @@ public class AutoSex extends Module{
             "О Боже, он такой большой (enemy)!",
             "Обращайся со мной как со шлюхой!",
             "Ахххх! Трахни меня глубже (enemy)!",
-            "Наполи меня своей спермой (enemy)~!",
+            "Наполни меня своей спермой (enemy)~!",
             "Уничтожь меня из нутри (enemy)!~"
         ))
         .visible(message::get)

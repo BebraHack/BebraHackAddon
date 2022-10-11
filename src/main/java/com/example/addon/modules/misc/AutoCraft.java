@@ -31,7 +31,7 @@ public class AutoCraft extends Module {
     private final Setting<Boolean> antiDesync = sgGeneral.add(new BoolSetting.Builder()
         .name("anti-desync")
         .description("Try to prevent inventory desync.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 

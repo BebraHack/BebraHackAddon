@@ -77,4 +77,5 @@ public class SpamPlus extends Module {
         "йоу йоу ееее."
 
     );
+
 }
