@@ -83,14 +83,14 @@ public class Burrow extends Module {
     private final Setting<Block> block = sgGeneral.add(new EnumSetting.Builder<Block>()
         .name("block")
         .description("The block to use for Burrow.")
-        .defaultValue(Block.Obsidian)
+        .defaultValue(Block.Anvil)
         .build()
     );
 
     private final Setting<Block> fallbackBlock = sgGeneral.add(new EnumSetting.Builder<Block>()
         .name("fallback-block")
         .description("The fallback block to use for Burrow.")
-        .defaultValue(Block.EChest)
+        .defaultValue(Block.Anvil)
         .build()
     );
 
@@ -120,7 +120,7 @@ public class Burrow extends Module {
     private final Setting<Boolean> rotate = sgPlacing.add(new BoolSetting.Builder()
         .name("rotate")
         .description("Faces the block you place server-side.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 
