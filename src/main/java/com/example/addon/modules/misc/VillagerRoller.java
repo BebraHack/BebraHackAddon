@@ -48,8 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
-//https://github.com/maxsupermanhd этот чел доебался что я спиздил его функцию, которая есть в каждом втором аддоне. Короче чтобы мне не ебали мозги оставил ссылку на его гитхаб//
-import static net.minecraft.sound.SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK;
+//https://github.com/maxsupermanhd этот чел сделал эту функцию//
 
 public class VillagerRoller extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -126,7 +125,7 @@ public class VillagerRoller extends Module {
     public List<rollingEnchantment> searchingEnchants = new ArrayList<>();
 
     public VillagerRoller() {
-        super(Addon.misc, "villager-roller", "Rolls trades.");
+        super(Addon.misc, "villager-roller", "Rolls trades/ by https://github.com/maxsupermanhd?tab=repositories .");
     }
 
     @Override
