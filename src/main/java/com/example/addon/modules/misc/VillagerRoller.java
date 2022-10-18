@@ -48,7 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
-
+//https://github.com/maxsupermanhd этот чел доебался что я спиздил его функцию, которая есть в каждом втором аддоне. Короче чтобы мне не ебали мозги оставил ссылку на его гитхаб//
 import static net.minecraft.sound.SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK;
 
 public class VillagerRoller extends Module {
