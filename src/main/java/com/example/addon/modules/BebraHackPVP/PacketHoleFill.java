@@ -50,7 +50,7 @@ public class PacketHoleFill extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgAdvanced = settings.createGroup("Advanced");
     private final SettingGroup sgPause = settings.createGroup("Pause");
-    private final SettingGroup sgRender = settings.createGroup("Render");
+    //private final SettingGroup sgRender = settings.createGroup("Render");
 
     private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
         .name("blocks")
@@ -310,7 +310,7 @@ public class PacketHoleFill extends Module {
     // Render
 
 
-    private final Setting<Boolean> renderSwing = sgRender.add(new BoolSetting.Builder()
+    /*private final Setting<Boolean> renderSwing = sgRender.add(new BoolSetting.Builder()
         .name("render-swing")
         .description("Renders a hand-swing animation when you place a block.")
         .defaultValue(true)
@@ -413,9 +413,10 @@ public class PacketHoleFill extends Module {
         .visible(render::get)
         .build()
     );
+    */
 
-    private final Pool<RenderBlock> renderBlockPool = new Pool<>(RenderBlock::new);
-    private final List<RenderBlock> renderBlocks = new ArrayList<>();
+    //private final Pool<RenderBlock> renderBlockPool = new Pool<>(RenderBlock::new);
+    //private final List<RenderBlock> renderBlocks = new ArrayList<>();
 
     private boolean shouldUnsneak;
 
@@ -427,18 +428,22 @@ public class PacketHoleFill extends Module {
     public void onActivate() {
         shouldUnsneak = false;
 
-        if (!renderBlocks.isEmpty()) {
+        /*if (!renderBlocks.isEmpty()) {
             for (RenderBlock block : renderBlocks) renderBlockPool.free(block);
             renderBlocks.clear();
         }
+
+         */
     }
 
     @Override
     public void onDeactivate() {
-        if (!renderBlocks.isEmpty()) {
+        /*if (!renderBlocks.isEmpty()) {
             for (RenderBlock block : renderBlocks) renderBlockPool.free(block);
             renderBlocks.clear();
         }
+
+         */
     }
 
     @EventHandler
@@ -584,7 +589,7 @@ public class PacketHoleFill extends Module {
                         if (hole.isDouble() && doubles.get() && fillBoth.get()) {
                             if (block < maxBlocksPerTick.get()) {
                                 place(hole.pos1, item, !rotated ? rotate.get() : false);
-                                if (!isRendered(hole.pos1)) renderBlocks.add(renderBlockPool.get().set(hole.pos1, Dir.get(hole.direction)));
+                                //if (!isRendered(hole.pos1)) renderBlocks.add(renderBlockPool.get().set(hole.pos1, Dir.get(hole.direction)));
 
                                 rotated = true;
                                 block++;
@@ -592,7 +597,7 @@ public class PacketHoleFill extends Module {
 
                             if (block < maxBlocksPerTick.get()) {
                                 place(hole.pos2, item, !rotated ? rotate.get() : false);
-                                if (!isRendered(hole.pos2)) renderBlocks.add(renderBlockPool.get().set(hole.pos2, Dir.get(hole.direction.getOpposite())));
+                                //if (!isRendered(hole.pos2)) renderBlocks.add(renderBlockPool.get().set(hole.pos2, Dir.get(hole.direction.getOpposite())));
 
                                 rotated = true;
                                 block++;
@@ -600,7 +605,7 @@ public class PacketHoleFill extends Module {
                         } else {
                             if (block < maxBlocksPerTick.get()) {
                                 place(hole.pos1, item, !rotated ? rotate.get() : false);
-                                if (!isRendered(hole.pos1)) renderBlocks.add(renderBlockPool.get().set(hole.pos1, 0));
+                                //if (!isRendered(hole.pos1)) renderBlocks.add(renderBlockPool.get().set(hole.pos1, 0));
 
                                 rotated = true;
                                 block++;
@@ -616,21 +621,25 @@ public class PacketHoleFill extends Module {
 
     // Ticking fade animation
 
-    @EventHandler
+    /*@EventHandler
     private void onPostTick(TickEvent.Post event) {
         renderBlocks.forEach(RenderBlock::tick);
         renderBlocks.removeIf(renderBlock -> renderBlock.ticks <= 0);
     }
 
+     */
+
     // Rendering
 
-    @EventHandler
+    /*@EventHandler
     private void onRender3D(Render3DEvent event) {
         if (!renderBlocks.isEmpty()) {
             renderBlocks.sort(Comparator.comparingInt(block -> -block.ticks));
             renderBlocks.forEach(block -> block.render(event, shapeMode.get()));
         }
     }
+
+     */
 
     // Utils
 
@@ -649,7 +658,7 @@ public class PacketHoleFill extends Module {
         return drinkPause.get() && (mc.player.isUsingItem() && (mc.player.getMainHandStack().getItem() instanceof PotionItem || mc.player.getOffHandStack().getItem() instanceof PotionItem));
     }
 
-    private boolean isRendered(BlockPos pos) {
+    /*private boolean isRendered(BlockPos pos) {
         for (RenderBlock block : renderBlocks) {
             if (block.pos.equals(pos)) {
                 return true;
@@ -658,6 +667,8 @@ public class PacketHoleFill extends Module {
 
         return false;
     }
+
+     */
 
     private boolean isHole(BlockPos pos) {
         if (isValidHole(pos, true) && isValidHole(pos.up(), false)) {
@@ -778,11 +789,11 @@ public class PacketHoleFill extends Module {
 
             mc.getSoundManager().play(new PositionedSoundInstance(group.getPlaceSound(), SoundCategory.BLOCKS, (group.getVolume() + 1.0F) / 8.0F, group.getPitch() * 0.5F, Random.create(), result.getBlockPos()));
 
-            if (renderSwing.get()) {
-                mc.player.swingHand(hand);
-            } else {
-                mc.getNetworkHandler().sendPacket(new HandSwingC2SPacket(hand));
-            }
+            //if (renderSwing.get()) {
+           //     mc.player.swingHand(hand);
+           // } else {
+            //    mc.getNetworkHandler().sendPacket(new HandSwingC2SPacket(hand));
+           // }
         }
     }
 
@@ -873,7 +884,7 @@ public class PacketHoleFill extends Module {
 
     // Hole Rendering
 
-    public class RenderBlock {
+    /*public class RenderBlock {
         public BlockPos.Mutable pos = new BlockPos.Mutable();
         public int exclude;
         public int ticks;
@@ -954,4 +965,6 @@ public class PacketHoleFill extends Module {
             linesBottom = prevLinesBottom.copy();
         }
     }
+
+     */
 }

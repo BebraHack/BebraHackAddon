@@ -62,7 +62,6 @@ public class AnchorAuraBEBRA extends Module {
     private final SettingGroup sgDamage = settings.createGroup("Damage");
     private final SettingGroup sgInventory = settings.createGroup("Inventory");
     private final SettingGroup sgPause = settings.createGroup("Pause");
-    private final SettingGroup sgRender = settings.createGroup("Render");
     private final SettingGroup sgDebug = settings.createGroup("Debug");
 
 
@@ -105,15 +104,6 @@ public class AnchorAuraBEBRA extends Module {
     private final Setting<Boolean> pauseOnEat = sgPause.add(new BoolSetting.Builder().name("pause-on-eat").description("Pause placing while eating.").defaultValue(false).build());
     private final Setting<Boolean> pauseOnDrink = sgPause.add(new BoolSetting.Builder().name("pause-on-drink").description("Pause placing while drinking.").defaultValue(false).build());
     private final Setting<Boolean> pauseOnMine = sgPause.add(new BoolSetting.Builder().name("pause-on-mine").description("Pause placing while mining.").defaultValue(false).build());
-
-
-    private final Setting<Boolean> swing = sgRender.add(new BoolSetting.Builder().name("swing").description("Whether to swing hand client-side.").defaultValue(true).build());
-    private final Setting<RenderMode> render = sgRender.add(new EnumSetting.Builder<RenderMode>().name("render").description("Renders the block where it is placing a anchor.").defaultValue(RenderMode.Smooth).build());
-    private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>().name("shape-mode").description("How the shapes are rendered.").defaultValue(ShapeMode.Both).visible(() -> render.get() != RenderMode.Off).build());
-    private final Setting<SettingColor> sideColor = sgRender.add(new ColorSetting.Builder().name("side-color").description("The side color for positions to be placed.").defaultValue(new SettingColor(15, 255, 211,75)).visible(() -> render.get() != RenderMode.Off).build());
-    private final Setting<SettingColor> lineColor = sgRender.add(new ColorSetting.Builder().name("line-color").description("The line color for positions to be placed.").defaultValue(new SettingColor(15, 255, 211)).visible(() -> render.get() != RenderMode.Off).build());
-    private final Setting<Integer> smoothFactor = sgRender.add(new IntSetting.Builder().name("smooth-factor").description("Speed of transition from position to another.").defaultValue(6).range(1, 30).sliderRange(1, 30).visible(() -> render.get() == RenderMode.Smooth).build());
-    private final Setting<Integer> fadeTime = sgRender.add(new IntSetting.Builder().name("fade-time").description("Render fade time.").defaultValue(10).range(1, 30).sliderRange(1, 30).visible(() -> render.get() == RenderMode.Fade).build());
 
 
     private final Setting<Boolean> debugChat = sgDebug.add(new BoolSetting.Builder().name("debug-chat").description("Send information to the chat.").defaultValue(false).build());
@@ -191,28 +181,6 @@ public class AnchorAuraBEBRA extends Module {
         quickPlace(new BlockPosX(event.getPos()));
     }
 
-    @EventHandler
-    private void onRender(Render3DEvent event){
-        if (bestPos == null || render.get() == RenderMode.Off) return;
-
-        try {
-            if (debugRender.get() && renderSphere != null && !renderSphere.isEmpty()){
-                renderSphere.forEach(pos -> {
-                    event.renderer.box(pos, new Color().a(10), new Color().a(100), ShapeMode.Both, 0);
-                });
-            }
-        }catch (ConcurrentModificationException ignored){
-        }
-
-        Box box = new Box(bestPos);
-
-        switch (render.get()){
-            case Fade -> {
-
-            }
-            case Smooth -> renderBox(event, box);
-        }
-    }
 
     // [Misc] //
 
@@ -435,27 +403,6 @@ public class AnchorAuraBEBRA extends Module {
 
     // [Render] //
 
-    private void renderBox(Render3DEvent event, Box post){
-        if (renderBox == null) renderBox = post;
-
-        double minxX = (post.minX - renderBox.minX) / smoothFactor.get();
-        double minxY = (post.minY - renderBox.minY) / smoothFactor.get();
-        double minxZ = (post.minZ - renderBox.minZ) / smoothFactor.get();
-
-        double maxX = (post.maxX - renderBox.maxX) / smoothFactor.get();
-        double maxY = (post.maxY - renderBox.maxY) / smoothFactor.get();
-        double maxZ = (post.maxZ - renderBox.maxZ) / smoothFactor.get();
-
-        renderBox = new Box(renderBox.minX + minxX, renderBox.minY + minxY, renderBox.minZ + minxZ, renderBox.maxX + maxX, renderBox.maxY + maxY,  renderBox.maxZ + maxZ);
-
-        event.renderer.box(renderBox, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
-    }
-
-    public enum RenderMode{
-        Off,
-        Fade,
-        Smooth
-    }
 
     public enum CalculatingMode{
         Normal,

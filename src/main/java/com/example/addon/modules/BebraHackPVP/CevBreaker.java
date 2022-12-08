@@ -41,7 +41,7 @@ import static com.example.addon.Utils.BlockInfo.*;
 
 public class CevBreaker extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgRender = settings.createGroup("Render");
+    //private final SettingGroup sgRender = settings.createGroup("Render");
     private final SettingGroup sgNone = settings.createGroup("");
 
     private final Setting<Notifications.Mode> notifications = sgNone.add(new EnumSetting.Builder<Notifications.Mode>().name("notifications").defaultValue(Notifications.Mode.Toast).build());
@@ -55,13 +55,13 @@ public class CevBreaker extends Module {
     private final Setting<Boolean> rotate = sgGeneral.add(new BoolSetting.Builder().name("rotate").description("Automatically faces towards the blocks being placed.").defaultValue(false).build());
     private final Setting<Boolean> debug = sgGeneral.add(new BoolSetting.Builder().name("debug").description("Sends info in chat about CEV.").defaultValue(false).build());
 
-    private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder().name("render").description("Renders the block where it interacting.").defaultValue(true).build());
+    /*private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder().name("render").description("Renders the block where it interacting.").defaultValue(true).build());
     private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>().name("shape-mode").defaultValue(ShapeMode.Both).visible(render::get).build());
     private final Setting<SettingColor> sideColor = sgRender.add(new ColorSetting.Builder().name("side-color").description("The side color for positions to be broken.").defaultValue(new SettingColor(255, 0, 170, 35)).visible(() -> render.get() && shapeMode.get() != ShapeMode.Lines).build());
     private final Setting<SettingColor> lineColor = sgRender.add(new ColorSetting.Builder().name("line-color").description("The line color for positions to be broken.").defaultValue(new SettingColor(255, 0, 170)).visible(() -> render.get() && shapeMode.get() != ShapeMode.Sides).build());
     private final Setting<Boolean> renderProgress = sgRender.add(new BoolSetting.Builder().name("render-progress").description("Renders the progress of breaking block.").defaultValue(true).visible(() -> !instant.get()).build());
     private final Setting<Double> scale = sgRender.add(new DoubleSetting.Builder().name("scale").description("The scale of rendered text").defaultValue(1.5).sliderRange(0.01, 3).visible(() -> !instant.get() && renderProgress.get()).build());
-
+*/
     public CevBreaker() {
         super(Addon.combat, "cev-breaker", "");
     }
@@ -258,7 +258,7 @@ public class CevBreaker extends Module {
         return posList.isEmpty() ? null : posList.get(0);
     }
 
-    @EventHandler
+    /*@EventHandler
     public void on3DRender(Render3DEvent event) {
         if (breakPos == null || !render.get()) return;
 
@@ -281,6 +281,8 @@ public class CevBreaker extends Module {
             NametagUtils.end();
         }
     }
+
+     */
 
     private void reset() {
         obsidianTask.reset();

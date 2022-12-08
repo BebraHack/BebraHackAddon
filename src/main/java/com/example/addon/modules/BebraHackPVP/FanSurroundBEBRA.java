@@ -30,7 +30,7 @@ import java.util.List;
 public class FanSurroundBEBRA extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgProtect = settings.createGroup("Protect");
-    private final SettingGroup sgRender = settings.createGroup("Render");
+    //private final SettingGroup sgRender = settings.createGroup("Render");
 
     private final Setting<Integer> blockPerTick = sgGeneral.add(new IntSetting.Builder().name("blocks-per-tick").description("Block placements per tick.").defaultValue(4).min(1).sliderMax(10).build());
     private final Setting<Boolean> useDouble = sgGeneral.add(new BoolSetting.Builder().name("double").description("Place at your feet and head.").defaultValue(false).build());
@@ -46,12 +46,12 @@ public class FanSurroundBEBRA extends Module {
 
     private final Setting<Boolean> protect = sgProtect.add(new BoolSetting.Builder().name("protect").description("Protect yourself from surround break/hold.").defaultValue(false).build());
 
-    private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder().name("render").description("Renders where the surround will be placed.").defaultValue(true).build());
+    /*private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder().name("render").description("Renders where the surround will be placed.").defaultValue(true).build());
     private final Setting<Boolean> alwaysRender = sgRender.add(new BoolSetting.Builder().name("always").description("Render the surround blocks after they are placed.").defaultValue(false).visible(render :: get).build());
     private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>().name("shape-mode").description("How the shapes are rendered.").defaultValue(ShapeMode.Both).build());
     private final Setting<SettingColor> sideColor = sgRender.add(new ColorSetting.Builder().name("side-color").description("The side color.").defaultValue(new SettingColor(15, 255, 211,75)).build());
     private final Setting<SettingColor> lineColor = sgRender.add(new ColorSetting.Builder().name("line-color").description("The line color.").defaultValue(new SettingColor(15, 255, 211)).build());
-
+*/
     private final ArrayList<Vec3d> surr = new ArrayList<Vec3d>() {{
         add(new Vec3d(1, 0, 0));
         add(new Vec3d(-1, 0, 0));
@@ -68,7 +68,7 @@ public class FanSurroundBEBRA extends Module {
 
 
     public FanSurroundBEBRA() {
-        super(Addon.combat, "FanSurroundBEBRA", "ByMrFinkaandJabronyyy.");
+        super(Addon.combat, "FanSurroundBEBRA", "ByMrFinkaAndJabronyyy.");
     }
 
     public FanSurroundBEBRA(Category category, String name, String description) {
@@ -161,7 +161,7 @@ public class FanSurroundBEBRA extends Module {
             block == Blocks.RESPAWN_ANCHOR;
     }
 
-    @EventHandler
+    /*@EventHandler
     private void onRender(Render3DEvent event) {
         if (render.get()) {
             BlockPos ppos = mc.player.getBlockPos();
@@ -172,4 +172,8 @@ public class FanSurroundBEBRA extends Module {
             }
         }
     }
+
+     */
 }
+
+
