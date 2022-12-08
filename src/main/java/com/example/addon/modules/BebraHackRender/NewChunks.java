@@ -1,6 +1,5 @@
 package com.example.addon.modules.BebraHackRender;
-
-
+/*
 import com.example.addon.Addon;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
@@ -23,9 +22,6 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import java.util.*;
 
-/*
-
-*/
 public class NewChunks extends Module {
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -198,3 +194,4 @@ public class NewChunks extends Module {
         }
     }
 }
+*/

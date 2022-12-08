@@ -1,5 +1,5 @@
 package com.example.addon.modules.BebraHackRender;
-
+/*
 import com.example.addon.Addon;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.settings.ColorSetting;
@@ -42,3 +42,6 @@ public class Confetti extends Module {
         return new Vec3d((double) colorSetting.get().r / 255, (double) colorSetting.get().g / 255, (double) colorSetting.get().b / 255);
     }
 }
+
+
+ */

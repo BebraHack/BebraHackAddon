@@ -1,5 +1,5 @@
 package com.example.addon.modules.BebraHackRender;
-
+/*
 import com.example.addon.Addon;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
@@ -90,3 +90,6 @@ public class Prefix extends Module {
         return prefix;
     }
 }
+
+
+ */

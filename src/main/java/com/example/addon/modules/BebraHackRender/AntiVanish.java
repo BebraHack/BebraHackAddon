@@ -1,6 +1,5 @@
 package com.example.addon.modules.BebraHackRender;
 
-
 import com.example.addon.Addon;
 import com.google.gson.JsonArray;
 import meteordevelopment.orbit.EventHandler;

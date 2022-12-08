@@ -1,5 +1,5 @@
 package com.example.addon.modules.BebraHackRender;
-
+/*
 import com.example.addon.Addon;
 import com.example.addon.Utils.BEntityUtils;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
@@ -300,3 +300,5 @@ public class HoleESPPlus extends Module {
         }
     }
 }
+
+ */

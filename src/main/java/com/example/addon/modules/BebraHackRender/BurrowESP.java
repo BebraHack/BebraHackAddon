@@ -1,5 +1,5 @@
 package com.example.addon.modules.BebraHackRender;
-
+/*
 import com.example.addon.Addon;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import com.example.addon.Utils.BEntityUtils;
@@ -99,3 +99,5 @@ public class BurrowESP extends Module {
         else if (isTargetBurrowed) event.renderer.box(target, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 }
+
+ */
