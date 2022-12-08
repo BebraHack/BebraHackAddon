@@ -1,5 +1,5 @@
 package com.example.addon.modules.misc;
-
+/*
 import com.example.addon.Addon;
 import com.example.addon.Utils.CHMainUtils;
 import com.example.addon.Utils.SendRawMessageEvent;
@@ -189,3 +189,6 @@ public class ChatEncryption extends Module {
         }
     }
 }
+
+
+ */

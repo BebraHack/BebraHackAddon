@@ -51,8 +51,6 @@ import java.util.*;
 
 import static net.minecraft.sound.SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK;
 
-//https://github.com/maxsupermanhd этот чел сделал эту функцию//
-
 public class VillagerRoller extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgSound = settings.createGroup("Sound");

@@ -83,8 +83,8 @@ public class SilentItem extends Module {
             }
             toggle();
         }
-    }
 
+    }
     public enum Item {
         Pearl,
         Rocket;

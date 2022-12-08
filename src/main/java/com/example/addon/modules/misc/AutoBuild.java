@@ -13,7 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 public class AutoBuild extends Module {
-    public enum build {Portal, Penis, Bunker, Platform, Wither, Highway;}
+    public enum build {Portal, Penis, heart, Bunker, Platform, Wither, Swastika, Highway;}
     private final BlockPos.Mutable blockPos = new BlockPos.Mutable();
     private boolean place, toggle;
     private final SettingGroup sgMisc = settings.createGroup("Misc");
@@ -38,7 +38,38 @@ public class AutoBuild extends Module {
                 if (place) return;
                 p(2, 3, 0);
                 if (place) return;
-                p(2, 4, 0);
+                if (togg.get()) {
+                    ChatUtils.info("Done");
+                    place = false;
+                    toggle();
+                }
+            }
+            case heart -> {
+                p(2, 0, 0);
+                if (place) return;
+                p(2, 1, 0);
+                if (place) return;
+                p(2, 1, 1);
+                if (place) return;
+                p(2, 1, -1);
+                if (place) return;
+                p(2, 2, 0);
+                if (place) return;
+                p(2, 2, 1);
+                if (place) return;
+                p(2, 2, -1);
+                if (place) return;
+                p(2, 2, -2);
+                if (place) return;
+                p(2, 2, 2);
+                if (place) return;
+                p(2, 3, -2);
+                if (place) return;
+                p(2, 3, -1);
+                if (place) return;
+                p(2, 3, 2);
+                if (place) return;
+                p(2, 3, 1);
                 if (place) return;
                 if (togg.get()) {
                     ChatUtils.info("Done");
@@ -207,6 +238,48 @@ public class AutoBuild extends Module {
                 h(2, 2, 1);
                 if (place) return;
                 h(2, 2, -1);
+                if (togg.get()) {
+                    ChatUtils.info("Done");
+                    place = false;
+                    toggle();
+                }
+            }
+
+            case Swastika -> {
+                p(1, 0, 0);
+                if (place) return;
+                p(1, 0, -1);
+                if (place) return;
+                p(1, 0, -2);
+                if (place) return;
+                p(1, 1, 0);
+                if (place) return;
+                p(1, 2, 0);
+                if (place) return;
+                p(1, 2, -1);
+                if (place) return;
+                p(1, 2, -2);
+                if (place) return;
+                p(1, 3, -2);
+                if (place) return;
+                p(1, 4, -2);
+                if (place) return;
+                p(1, 3, 0);
+                if (place) return;
+                p(1, 4, 0);
+                if (place) return;
+                p(1, 4, 1);
+                if (place) return;
+                p(1, 4, 2);
+                if (place) return;
+                p(1, 2, 1);
+                if (place) return;
+                p(1, 2, 2);
+                if (place) return;
+                p(1, 1, 2);
+                if (place) return;
+                p(1, 0, 2);
+                if (place) return;
                 if (togg.get()) {
                     ChatUtils.info("Done");
                     place = false;

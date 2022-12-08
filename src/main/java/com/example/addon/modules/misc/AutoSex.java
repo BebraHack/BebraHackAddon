@@ -32,7 +32,7 @@ public class AutoSex extends Module{
 
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgSex = settings.createGroup("Auto Sex");
+    private final SettingGroup sgSex = settings.createGroup("AutoSex");
 
 
     // General
