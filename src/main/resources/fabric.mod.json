@@ -2,11 +2,13 @@
   "schemaVersion": 1,
   "id": "addon-template",
   "version": "${version}",
-  "name": "BebraHack V4",
+  "name": "BebraHack V5",
   "description": "the best addon.",
   "authors": [
     "jabronyyy",
-    "MrFiNka"
+    "MrFiNka",
+    "Ranele",
+    "Cahekska"
   ],
   "contact": {
     "repo": ""
