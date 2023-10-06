@@ -1,12 +1,12 @@
 name: Java CI with Gradle
 
 concurrency: 
-  group: "V6"
+  group: "V5"
   cancel-in-progress: true
 
 on:
   push:
-    branches: [ V6 ]
+    branches: [ V5 ]
     paths-ignore:
       - '*.md'
 
@@ -31,8 +31,8 @@ jobs:
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "V6"
+          automatic_release_tag: "V5"
           prerelease: false
-          title: "V6"
+          title: "V5"
           files: |
             ./build/libs/*.jar

@@ -1,27 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "addon-bebra",
+  "id": "addon-template",
   "version": "${version}",
-  "name": "BebrahackV6",
-  "description": "The best meteor addon - BebraHackV6.",
+  "name": "BebraHack V5",
+  "description": "the best addon.",
   "authors": [
-    "jabronyyy, MrFiNka / assistants: Megakrutish, Vaxei"
+    "jabronyyy",
+    "MrFiNka",
+    "Ranele",
+    "Cahekska"
   ],
   "contact": {
-    "repo": "https://github.com/BebraHack/BebraHackAddon"
+    "repo": ""
   },
   "icon": "assets/template/icon.png",
   "environment": "client",
   "entrypoints": {
     "meteor": [
-      "bebra.hack.addon.Addon"
+      "com.example.addon.Addon"
     ]
   },
   "mixins": [
-    "addon-template.mixins.json"
+    "addon.mixins.json"
   ],
   "custom": {
-    "meteor-client:color": "204,0,102"
+    "meteor-client:color": "225,247,184"
   },
   "depends": {
     "java": ">=17",

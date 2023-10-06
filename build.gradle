@@ -1,5 +1,5 @@
 plugins {
-    id "fabric-loom" version "1.1-SNAPSHOT"
+    id 'fabric-loom' version '0.12-SNAPSHOT'
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
@@ -10,11 +10,11 @@ group = project.maven_group
 
 repositories {
     maven {
-        name = "Meteor Dev Releases"
+        name = "meteor-maven"
         url = "https://maven.meteordev.org/releases"
     }
     maven {
-        name = "Meteor Dev Snapshots"
+        name = "meteor-maven-snapshots"
         url = "https://maven.meteordev.org/snapshots"
     }
 }
