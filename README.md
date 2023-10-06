@@ -4,7 +4,7 @@
     <img width="569" alt="BebraHack banner" src="https://i.ibb.co/D4zSdBL/bebrahack.png">
   </kbd>
   <h3>Adds additional functionality to Meteor Client ☄️</h3>
-  <img alt="Minecraft" src="https://img.shields.io/badge/Minecraft-1.19.2-ff00ff?logo=hackthebox&logoColor=white&style=flat-square">
+  <img alt="Minecraft" src="https://img.shields.io/badge/Minecraft-1.19.4-ff00ff?logo=hackthebox&logoColor=white&style=flat-square">
   <img alt="GitHub release" src="https://img.shields.io/github/v/release/BebraHack/BebraHackAddon?color=d25eff&include_prereleases&style=flat-square">
   <img alt="GitHub downloads" src="https://img.shields.io/github/downloads/BebraHack/BebraHackAddon/total?color=9e81ff&logo=github&style=flat-square">
   <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/BebraHack/BebraHackAddon?color=5f99ff&logo=apachespark&logoColor=white&style=flat-square">
@@ -23,8 +23,8 @@ This addon adds many new features to the [Meteor Client](https://meteorclient.co
 ## ⬇️ Download
 You can [see how it looks](https://zgoly.github.io/addonview/generate?user=BebraHack&repo=BebraHackAddon&path=src/main/java/com/example/addon/modules) before downloading.
 
-1. Click **[here](https://github.com/BebraHack/BebraHackAddon/releases/latest/download/bebrahackV5-0.1.0.jar)** to download
-2. Move `bebrahackV5-0.1.0.jar` in `.minecraft/mods` folder
+1. Click **[here](https://github.com/BebraHack/BebraHackAddon/releases/download/V6/Bebrahack_V6-0.1.0.jar)** to download
+2. Move `Bebrahack_V6-0.1.0.jar` in `.minecraft/mods` folder
 
 Don't forget to download **[meteor dev build](https://meteorclient.com/download?devBuild=latest)**
 
