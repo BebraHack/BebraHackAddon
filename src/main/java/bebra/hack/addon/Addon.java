@@ -81,7 +81,7 @@ public class Addon extends MeteorAddon {
         //Modules.get().add(new Linia());
 
         //CHAT
-        Modules.get().add(new bebra_info_and_help());
+        Modules.get().add(new BebraInfoAndHelp());
         Modules.get().add(new ChatEncryption());
         Modules.get().add(new Prefix());
         Modules.get().add(new SpamInChat());
