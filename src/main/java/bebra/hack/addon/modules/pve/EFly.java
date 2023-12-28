@@ -1,4 +1,4 @@
-//часть кода взята из аддона bedtrap https://discord.gg/Grjwt77E - кантора педарасаф
+//часть кода взята из аддона bedtrap https://discord.gg/Grjwt77E
 package bebra.hack.addon.modules.pve;
 
 import bebra.hack.addon.Addon;
